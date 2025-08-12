@@ -1,14 +1,30 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
-import { ChevronDown, Menu, X, Calendar, Package, User, CreditCard, Bell, Heart, MessageCircle } from 'lucide-react';
+import ApplicationLogo from "@/Components/ApplicationLogo";
+import Dropdown from "@/Components/Dropdown";
+import NavLink from "@/Components/NavLink";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
+import { Link, usePage } from "@inertiajs/react";
+import { useState } from "react";
+import {
+    ChevronDown,
+    Menu,
+    X,
+    Calendar,
+    Package,
+    User,
+    CreditCard,
+    Bell,
+    Heart,
+    MessageCircle,
+    LayoutDashboard,
+    Users,
+    BarChart,
+    Shield,
+} from "lucide-react";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [showingNavigationDropdown, setShowingNavigationDropdown] =
+        useState(false);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
@@ -17,55 +33,106 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href="/" className="flex items-center space-x-2">
+                                <Link
+                                    href="/"
+                                    className="flex items-center space-x-2"
+                                >
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-amber-600" />
                                     <span className="text-xl font-bold text-slate-800">
-                                        Reserve<span className="text-amber-600">Ease</span>
+                                        Reserve
+                                        <span className="text-amber-600">
+                                            Ease
+                                        </span>
                                     </span>
                                 </Link>
                             </div>
-                            
+
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                    className="inline-flex items-center space-x-2 px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none"
-                                >
-                                    <Calendar className="w-4 h-4" />
-                                    <span>My Dashboard</span>
-                                </NavLink>
-                                
-                                <NavLink
-                                    href="#"
-                                    className="inline-flex items-center space-x-2 px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-500 hover:text-slate-700 hover:border-amber-300 transition duration-150 ease-in-out focus:outline-none focus:text-slate-700 focus:border-amber-300"
-                                >
-                                    <Calendar className="w-4 h-4" />
-                                    <span>My Reservations</span>
-                                </NavLink>
-                                
-                                <NavLink
-                                    href="#"
-                                    className="inline-flex items-center space-x-2 px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-500 hover:text-slate-700 hover:border-amber-300 transition duration-150 ease-in-out focus:outline-none focus:text-slate-700 focus:border-amber-300"
-                                >
-                                    <Package className="w-4 h-4" />
-                                    <span>Packages</span>
-                                </NavLink>
-                                
-                                <NavLink
-                                    href="#"
-                                    className="inline-flex items-center space-x-2 px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-500 hover:text-slate-700 hover:border-amber-300 transition duration-150 ease-in-out focus:outline-none focus:text-slate-700 focus:border-amber-300"
-                                >
-                                    <Heart className="w-4 h-4" />
-                                    <span>Venues</span>
-                                </NavLink>
-                                
-                                <NavLink
-                                    href="#"
-                                    className="inline-flex items-center space-x-2 px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-500 hover:text-slate-700 hover:border-amber-300 transition duration-150 ease-in-out focus:outline-none focus:text-slate-700 focus:border-amber-300"
-                                >
-                                    <MessageCircle className="w-4 h-4" />
-                                    <span>Support</span>
-                                </NavLink>
+                                {user.is_admin ? (
+                                    <NavLink
+                                        href={route("admin")}
+                                        active={
+                                            route().current("admin") &&
+                                            !route().current("admin.*")
+                                        }
+                                        className="inline-flex items-center space-x-2"
+                                    >
+                                        <LayoutDashboard className="w-4 h-4" />
+                                        <span>Dashboard</span>
+                                    </NavLink>
+                                ) : (
+                                    <NavLink
+                                        href={route("dashboard")}
+                                        active={route().current("dashboard")}
+                                        className="inline-flex items-center space-x-2"
+                                    >
+                                        <Calendar className="w-4 h-4" />
+                                        <span>Dashboard</span>
+                                    </NavLink>
+                                )}
+
+                                {user.is_admin ? (
+                                    // Admin Navigation
+                                    <>
+                                        <NavLink
+                                            href={route("admin.reservations")}
+                                            active={route().current(
+                                                "admin.reservations*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <Calendar className="w-4 h-4" />
+                                            <span>Reservations</span>
+                                        </NavLink>
+
+                                        <NavLink
+                                            href={route("admin.users")}
+                                            active={route().current(
+                                                "admin.users*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <Users className="w-4 h-4" />
+                                            <span>Users</span>
+                                        </NavLink>
+
+                                        <NavLink
+                                            href={route("admin.analytics")}
+                                            active={route().current(
+                                                "admin.analytics*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <BarChart className="w-4 h-4" />
+                                            <span>Analytics</span>
+                                        </NavLink>
+                                    </>
+                                ) : (
+                                    // Regular User Navigation
+                                    <>
+                                        <NavLink
+                                            href={route("reservations.index")}
+                                            active={route().current(
+                                                "reservations*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <Calendar className="w-4 h-4" />
+                                            <span>My Reservations</span>
+                                        </NavLink>
+
+                                        <NavLink
+                                            href={route("packages.index")}
+                                            active={route().current(
+                                                "packages*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <Package className="w-4 h-4" />
+                                            <span>Packages</span>
+                                        </NavLink>
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -77,7 +144,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full"></span>
                                 </button>
                             </div>
-                            
+
                             <div className="relative ms-3">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -88,30 +155,49 @@ export default function AuthenticatedLayout({ header, children }) {
                                             >
                                                 <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center mr-2">
                                                     <span className="text-amber-600 font-semibold text-sm">
-                                                        {user.name.charAt(0).toUpperCase()}
+                                                        {user.name
+                                                            .charAt(0)
+                                                            .toUpperCase()}
                                                     </span>
                                                 </div>
-                                                {user.name}
+                                                <div className="flex items-center">
+                                                    {user.name}
+                                                    {user.is_admin && (
+                                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                            <Shield className="w-3 h-3 mr-1" />
+                                                            Admin
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <ChevronDown className="ms-2 h-4 w-4" />
                                             </button>
                                         </span>
                                     </Dropdown.Trigger>
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')} className="flex items-center">
+                                        <Dropdown.Link
+                                            href={route("profile.edit")}
+                                            className="flex items-center"
+                                        >
                                             <User className="w-4 h-4 mr-2" />
                                             Profile
                                         </Dropdown.Link>
-                                        <Dropdown.Link href="#" className="flex items-center">
+                                        <Dropdown.Link
+                                            href={route("profile.edit")}
+                                            className="flex items-center"
+                                        >
                                             <CreditCard className="w-4 h-4 mr-2" />
                                             Billing & Payments
                                         </Dropdown.Link>
-                                        <Dropdown.Link href="#" className="flex items-center">
+                                        <Dropdown.Link
+                                            href={route("profile.edit")}
+                                            className="flex items-center"
+                                        >
                                             <Bell className="w-4 h-4 mr-2" />
                                             Notifications
                                         </Dropdown.Link>
                                         <div className="border-t border-amber-100"></div>
                                         <Dropdown.Link
-                                            href={route('logout')}
+                                            href={route("logout")}
                                             method="post"
                                             as="button"
                                         >
@@ -126,7 +212,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
+                                        (previousState) => !previousState
                                     )
                                 }
                                 className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 transition duration-150 ease-in-out hover:bg-amber-100 hover:text-amber-500 focus:bg-amber-100 focus:text-amber-500 focus:outline-none"
@@ -143,39 +229,88 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <div
                     className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
+                        (showingNavigationDropdown ? "block" : "hidden") +
+                        " sm:hidden"
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2 bg-white border-t border-amber-200">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                            className="flex items-center space-x-2"
-                        >
-                            <Calendar className="w-4 h-4" />
-                            <span>My Dashboard</span>
-                        </ResponsiveNavLink>
-                        
-                        <ResponsiveNavLink href="#" className="flex items-center space-x-2">
-                            <Calendar className="w-4 h-4" />
-                            <span>My Reservations</span>
-                        </ResponsiveNavLink>
-                        
-                        <ResponsiveNavLink href="#" className="flex items-center space-x-2">
-                            <Package className="w-4 h-4" />
-                            <span>Packages</span>
-                        </ResponsiveNavLink>
-                        
-                        <ResponsiveNavLink href="#" className="flex items-center space-x-2">
-                            <Heart className="w-4 h-4" />
-                            <span>Venues</span>
-                        </ResponsiveNavLink>
-                        
-                        <ResponsiveNavLink href="#" className="flex items-center space-x-2">
-                            <MessageCircle className="w-4 h-4" />
-                            <span>Support</span>
-                        </ResponsiveNavLink>
+                        {user.is_admin ? (
+                            <ResponsiveNavLink
+                                href={route("admin")}
+                                active={
+                                    route().current("admin") &&
+                                    !route().current("admin.*")
+                                }
+                                className="flex items-center space-x-2"
+                            >
+                                <LayoutDashboard className="w-4 h-4" />
+                                <span>Dashboard</span>
+                            </ResponsiveNavLink>
+                        ) : (
+                            <ResponsiveNavLink
+                                href={route("dashboard")}
+                                active={route().current("dashboard")}
+                                className="flex items-center space-x-2"
+                            >
+                                <Calendar className="w-4 h-4" />
+                                <span>Dashboard</span>
+                            </ResponsiveNavLink>
+                        )}
+
+                        {user.is_admin ? (
+                            // Admin Mobile Navigation
+                            <>
+                                <ResponsiveNavLink
+                                    href={route("admin.reservations")}
+                                    active={route().current(
+                                        "admin.reservations*"
+                                    )}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Calendar className="w-4 h-4" />
+                                    <span>Reservations</span>
+                                </ResponsiveNavLink>
+
+                                <ResponsiveNavLink
+                                    href={route("admin.users")}
+                                    active={route().current("admin.users*")}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Users className="w-4 h-4" />
+                                    <span>Users</span>
+                                </ResponsiveNavLink>
+
+                                <ResponsiveNavLink
+                                    href={route("admin.analytics")}
+                                    active={route().current("admin.analytics*")}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <BarChart className="w-4 h-4" />
+                                    <span>Analytics</span>
+                                </ResponsiveNavLink>
+                            </>
+                        ) : (
+                            // Regular User Mobile Navigation
+                            <>
+                                <ResponsiveNavLink
+                                    href={route("reservations.index")}
+                                    active={route().current("reservations*")}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Calendar className="w-4 h-4" />
+                                    <span>My Reservations</span>
+                                </ResponsiveNavLink>
+
+                                <ResponsiveNavLink
+                                    href={route("packages.index")}
+                                    active={route().current("packages*")}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Package className="w-4 h-4" />
+                                    <span>Packages</span>
+                                </ResponsiveNavLink>
+                            </>
+                        )}
                     </div>
 
                     <div className="border-t border-amber-200 bg-amber-50 pb-1 pt-4">
@@ -187,8 +322,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </span>
                                 </div>
                                 <div>
-                                    <div className="text-base font-medium text-slate-800">
+                                    <div className="text-base font-medium text-slate-800 flex items-center">
                                         {user.name}
+                                        {user.is_admin && (
+                                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                <Shield className="w-3 h-3 mr-1" />
+                                                Admin
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="text-sm font-medium text-slate-500">
                                         {user.email}
@@ -198,18 +339,18 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
+                            <ResponsiveNavLink href={route("profile.edit")}>
                                 Profile
                             </ResponsiveNavLink>
-                            <ResponsiveNavLink href="#">
+                            <ResponsiveNavLink href={route("profile.edit")}>
                                 Billing & Payments
                             </ResponsiveNavLink>
-                            <ResponsiveNavLink href="#">
+                            <ResponsiveNavLink href={route("profile.edit")}>
                                 Notifications
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
-                                href={route('logout')}
+                                href={route("logout")}
                                 as="button"
                             >
                                 Log Out

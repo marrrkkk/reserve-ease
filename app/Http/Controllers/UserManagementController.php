@@ -16,7 +16,7 @@ class UserManagementController extends Controller
         if (!$user || !$user->is_admin) {
             abort(403, 'Unauthorized');
         }
-        $users = User::all(); 
+        $users = User::all();
         return Inertia::render('Admin/UserManagement', [
             'users' => $users,
         ]);
@@ -29,9 +29,16 @@ class UserManagementController extends Controller
         if (!$user || !$user->is_admin) {
             abort(403, 'Unauthorized');
         }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        ]);
+
         $target = User::findOrFail($id);
-        $target->update($request->only(['username', 'email', 'role']));
-        return redirect()->back();
+        $target->update($request->only(['name', 'email']));
+
+        return redirect()->back()->with('success', 'User updated successfully!');
     }
 
     // Delete user
@@ -41,9 +48,16 @@ class UserManagementController extends Controller
         if (!$user || !$user->is_admin) {
             abort(403, 'Unauthorized');
         }
+
         $target = User::findOrFail($id);
+
+        // Prevent admin from deleting themselves
+        if ($target->id === $user->id) {
+            return redirect()->back()->with('error', 'You cannot delete your own account.');
+        }
+
         $target->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'User deleted successfully!');
     }
 
     // Promote user to admin
@@ -53,9 +67,17 @@ class UserManagementController extends Controller
         if (!$user || !$user->is_admin) {
             abort(403, 'Unauthorized');
         }
+
         $target = User::findOrFail($id);
-        $target->role = 'admin';
+
+        // Prevent promoting if already admin
+        if ($target->is_admin) {
+            return redirect()->back()->with('error', 'User is already an admin.');
+        }
+
+        $target->is_admin = true;
         $target->save();
-        return redirect()->back();
+
+        return redirect()->back()->with('success', 'User promoted to admin successfully!');
     }
 }

@@ -12,6 +12,13 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        // Redirect admin users to admin dashboard
+        if ($user->is_admin) {
+            return redirect()->route('admin');
+        }
+
+        // Regular user dashboard logic
         $reservations = Reservation::where('user_id', $user->id)->latest()->take(3)->get();
         return Inertia::render('Dashboard', [
             'auth' => ['user' => $user],
