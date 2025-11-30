@@ -11,6 +11,7 @@ import {
     AlertCircle,
     Bell,
     MapPin,
+    CreditCard,
 } from "lucide-react";
 
 export default function AdminDashboard({
@@ -90,7 +91,7 @@ export default function AdminDashboard({
             <div className="py-8">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {/* Quick Actions */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <Link
                             href={route("admin.reservations")}
                             className="group bg-gradient-to-r from-blue-500 to-blue-700 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -105,6 +106,22 @@ export default function AdminDashboard({
                                     </p>
                                 </div>
                                 <Eye className="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300" />
+                            </div>
+                        </Link>
+                        <Link
+                            href={route("admin.payments")}
+                            className="group bg-gradient-to-r from-green-500 to-green-700 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="text-left">
+                                    <h3 className="text-2xl font-bold mb-2">
+                                        Payment Management
+                                    </h3>
+                                    <p className="text-green-100">
+                                        Track payments and receipts
+                                    </p>
+                                </div>
+                                <CreditCard className="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300" />
                             </div>
                         </Link>
                         <Link
@@ -188,11 +205,16 @@ export default function AdminDashboard({
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-2xl font-bold text-slate-800">
-                                                                $
+                                                                ₱
                                                                 {Number(
                                                                     res.total_amount ||
                                                                         0
-                                                                ).toLocaleString()}
+                                                                ).toLocaleString(
+                                                                    "en-PH",
+                                                                    {
+                                                                        minimumFractionDigits: 2,
+                                                                    }
+                                                                )}
                                                             </p>
                                                             <p
                                                                 className={`text-sm font-medium text-${statusInfo.color}-600`}
@@ -266,7 +288,11 @@ export default function AdminDashboard({
                                             Revenue
                                         </span>
                                         <span className="text-2xl font-bold text-blue-700">
-                                            ${Number(revenue).toLocaleString()}
+                                            ₱
+                                            {Number(revenue).toLocaleString(
+                                                "en-PH",
+                                                { minimumFractionDigits: 2 }
+                                            )}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center">

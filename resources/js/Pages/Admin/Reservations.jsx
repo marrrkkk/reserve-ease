@@ -10,6 +10,8 @@ import {
     User as UserIcon,
     MapPin,
     Calendar,
+    FileText,
+    Download,
 } from "lucide-react";
 
 // Simple Toast component
@@ -29,7 +31,7 @@ function Toast({ message, onClose }) {
 function Modal({ show, onClose, onConfirm, children }) {
     if (!show) return null;
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40">
             <div className="bg-white rounded shadow-lg p-6 min-w-[300px]">
                 <div className="mb-4">{children}</div>
                 <div className="flex justify-end space-x-2">
@@ -199,6 +201,9 @@ export default function AdminReservations({ auth, reservations, flash }) {
                                                 Guests
                                             </th>
                                             <th className="px-4 py-2 border-b text-left text-xs font-medium text-blue-700 uppercase">
+                                                Payment
+                                            </th>
+                                            <th className="px-4 py-2 border-b text-left text-xs font-medium text-blue-700 uppercase">
                                                 Status
                                             </th>
                                             <th className="px-4 py-2 border-b text-left text-xs font-medium text-blue-700 uppercase">
@@ -239,6 +244,68 @@ export default function AdminReservations({ auth, reservations, flash }) {
                                                     </td>
                                                     <td className="px-4 py-2 border-b">
                                                         {res.guest_count}
+                                                    </td>
+                                                    <td className="px-4 py-2 border-b">
+                                                        <div className="text-xs space-y-1">
+                                                            <div
+                                                                className={`font-medium ${
+                                                                    res.payment_status ===
+                                                                    "Paid"
+                                                                        ? "text-green-600"
+                                                                        : "text-yellow-600"
+                                                                }`}
+                                                            >
+                                                                {res.payment_status ||
+                                                                    "In Progress"}
+                                                            </div>
+                                                            {res.payments &&
+                                                                res.payments
+                                                                    .length >
+                                                                    0 &&
+                                                                res.payments[0]
+                                                                    .payment_method && (
+                                                                    <div className="text-gray-500 capitalize">
+                                                                        {res.payments[0].payment_method.replace(
+                                                                            "_",
+                                                                            " "
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            {res.receipts &&
+                                                                res.receipts
+                                                                    .length >
+                                                                    0 && (
+                                                                    <div className="flex items-center gap-1 text-blue-600">
+                                                                        <FileText className="w-3 h-3" />
+                                                                        <a
+                                                                            href={route(
+                                                                                "receipts.view",
+                                                                                res
+                                                                                    .receipts[0]
+                                                                                    .id
+                                                                            )}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="hover:underline"
+                                                                        >
+                                                                            View
+                                                                            Receipt
+                                                                        </a>
+                                                                        <a
+                                                                            href={route(
+                                                                                "receipts.download",
+                                                                                res
+                                                                                    .receipts[0]
+                                                                                    .id
+                                                                            )}
+                                                                            className="hover:text-blue-800"
+                                                                            title="Download Receipt"
+                                                                        >
+                                                                            <Download className="w-3 h-3" />
+                                                                        </a>
+                                                                    </div>
+                                                                )}
+                                                        </div>
                                                     </td>
                                                     <td className="px-4 py-2 border-b">
                                                         <StatusBadge

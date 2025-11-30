@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import {
     Calendar,
     Plus,
@@ -153,7 +153,10 @@ export default function Dashboard({ auth, reservation = [] }) {
                                 <Plus className="w-12 h-12 text-white group-hover:rotate-90 transition-transform duration-300" />
                             </div>
                         </button>
-                        <button className="group bg-white border-2 border-amber-200 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:border-amber-300 transition-all duration-300">
+                        <Link
+                            href={route("reservations.index")}
+                            className="group bg-white border-2 border-amber-200 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:border-amber-300 transition-all duration-300"
+                        >
                             <div className="flex items-center justify-between">
                                 <div className="text-left">
                                     <h3 className="text-2xl font-bold text-slate-800 mb-2">
@@ -165,7 +168,7 @@ export default function Dashboard({ auth, reservation = [] }) {
                                 </div>
                                 <Eye className="w-12 h-12 text-amber-600 group-hover:scale-110 transition-transform duration-300" />
                             </div>
-                        </button>
+                        </Link>
                     </div>
 
                     {/* Main Content Grid */}
@@ -253,11 +256,16 @@ export default function Dashboard({ auth, reservation = [] }) {
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-2xl font-bold text-slate-800">
-                                                                $
-                                                                {(
+                                                                ₱
+                                                                {Number(
                                                                     res.total_amount ||
-                                                                    0
-                                                                ).toLocaleString()}
+                                                                        0
+                                                                ).toLocaleString(
+                                                                    "en-PH",
+                                                                    {
+                                                                        minimumFractionDigits: 2,
+                                                                    }
+                                                                )}
                                                             </p>
                                                             <p
                                                                 className={`text-sm font-medium text-${statusInfo.color}-600`}
@@ -278,12 +286,38 @@ export default function Dashboard({ auth, reservation = [] }) {
                                                     <div
                                                         className={`mt-4 pt-4 border-t ${statusInfo.borderColor}`}
                                                     >
-                                                        <div className="flex space-x-3">
+                                                        <div className="flex flex-wrap gap-2">
                                                             <button
                                                                 className={`px-4 py-2 bg-white text-${statusInfo.color}-700 border border-${statusInfo.color}-300 rounded-lg hover:bg-${statusInfo.color}-50 transition-colors text-sm font-medium`}
                                                             >
                                                                 View Details
                                                             </button>
+                                                            {(res.status ===
+                                                                "approved" ||
+                                                                res.status ===
+                                                                    "confirmed") &&
+                                                                (res.payment_status ===
+                                                                    "pending" ||
+                                                                    !res.payment_status) &&
+                                                                res.total_amount && (
+                                                                    <Link
+                                                                        href={route(
+                                                                            "payment.show",
+                                                                            res.id
+                                                                        )}
+                                                                        className="inline-flex items-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium"
+                                                                    >
+                                                                        <CreditCard className="w-4 h-4 mr-2" />
+                                                                        Pay Now
+                                                                    </Link>
+                                                                )}
+                                                            {res.payment_status ===
+                                                                "completed" && (
+                                                                <span className="inline-flex items-center px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+                                                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                                                    Paid
+                                                                </span>
+                                                            )}
                                                             {res.status ===
                                                                 "confirmed" && (
                                                                 <button
@@ -440,10 +474,10 @@ export default function Dashboard({ auth, reservation = [] }) {
                                             <span className="text-slate-600">
                                                 Total Spent
                                             </span>
-                                            <span className="text-sm font-medium text-slate-800">
-                                                $
+                                            <span className="text-2xl font-bold text-slate-800">
+                                                ₱
                                                 {totalSpent.toLocaleString(
-                                                    undefined,
+                                                    "en-PH",
                                                     {
                                                         minimumFractionDigits: 2,
                                                         maximumFractionDigits: 2,

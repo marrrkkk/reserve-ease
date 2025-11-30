@@ -27,19 +27,19 @@ const packages = [
     {
         id: 1,
         name: "Basic Package",
-        price: 299,
+        price: 15000,
         description: "Perfect for small gatherings",
     },
     {
         id: 2,
         name: "Standard Package",
-        price: 599,
+        price: 25000,
         description: "Great for medium events",
     },
     {
         id: 3,
         name: "Premium Package",
-        price: 999,
+        price: 45000,
         description: "Full-service luxury experience",
     },
     {
@@ -94,7 +94,7 @@ export default function CreateReservationModal({ isOpen, onClose }) {
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={handleClose}>
+            <Dialog as="div" className="relative z-40" onClose={handleClose}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -500,7 +500,7 @@ export default function CreateReservationModal({ isOpen, onClose }) {
                                                                     <p className="text-lg font-bold text-slate-800">
                                                                         {pkg.price >
                                                                         0
-                                                                            ? `$${pkg.price}`
+                                                                            ? `₱${Number(pkg.price).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`
                                                                             : "Custom"}
                                                                     </p>
                                                                     {selectedPackage.id ===
@@ -527,7 +527,14 @@ export default function CreateReservationModal({ isOpen, onClose }) {
                                                     </span>
                                                     <span className="text-2xl font-bold text-amber-700">
                                                         {data.total_amount > 0
-                                                            ? `$${data.total_amount}`
+                                                            ? `₱${Number(
+                                                                  data.total_amount
+                                                              ).toLocaleString(
+                                                                  "en-PH",
+                                                                  {
+                                                                      minimumFractionDigits: 2,
+                                                                  }
+                                                              )}`
                                                             : "Custom Quote"}
                                                     </span>
                                                 </div>

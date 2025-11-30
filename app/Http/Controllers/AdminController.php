@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AdminController extends Controller
 {
+    // Middleware is applied in routes (web.php) via AdminMiddleware
+
     public function index()
     {
         $total = Reservation::count();
@@ -16,7 +19,7 @@ class AdminController extends Controller
         $recent = Reservation::with('user')->latest()->take(5)->get();
 
         // Analytics: Monthly reservations (last 6 months)
-        $monthly = Reservation::selectRaw('DATE_FORMAT(event_date, "%Y-%m") as month, COUNT(*) as count')
+        $monthly = Reservation::selectRaw("strftime('%Y-%m', event_date) as month, COUNT(*) as count")
             ->groupBy('month')
             ->orderBy('month', 'desc')
             ->limit(6)
@@ -53,7 +56,7 @@ class AdminController extends Controller
 
     public function reservations()
     {
-        $reservations = Reservation::with('user')->latest()->get();
+        $reservations = Reservation::with(['user', 'payments', 'receipts'])->latest()->get();
         $flash = session('success') ? ['success' => session('success')] : [];
         return Inertia::render('Admin/Reservations', [
             'reservations' => $reservations,
@@ -114,7 +117,7 @@ class AdminController extends Controller
         $approved = Reservation::where('status', 'approved')->count();
         $pending = Reservation::where('status', 'pending')->count();
         $recent = Reservation::with('user')->latest()->take(5)->get();
-        $monthly = Reservation::selectRaw('DATE_FORMAT(event_date, "%Y-%m") as month, COUNT(*) as count')
+        $monthly = Reservation::selectRaw("strftime('%Y-%m', event_date) as month, COUNT(*) as count")
             ->groupBy('month')
             ->orderBy('month', 'desc')
             ->limit(6)
@@ -138,6 +141,17 @@ class AdminController extends Controller
                 'monthly' => $monthly,
                 'top_event_types' => $top_event_types,
             ],
+        ]);
+    }
+
+    public function payments()
+    {
+        $payments = Payment::with(['reservation', 'user'])
+            ->latest()
+            ->get();
+
+        return Inertia::render('Admin/Payments', [
+            'payments' => $payments,
         ]);
     }
 }

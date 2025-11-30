@@ -18,8 +18,13 @@ class DashboardController extends Controller
             return redirect()->route('admin');
         }
 
-        // Regular user dashboard logic
-        $reservations = Reservation::where('user_id', $user->id)->latest()->take(3)->get();
+        // Regular user dashboard logic - load with payment status
+        $reservations = Reservation::with('latestPayment')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return Inertia::render('Dashboard', [
             'auth' => ['user' => $user],
             'reservation' => $reservations,
@@ -29,7 +34,10 @@ class DashboardController extends Controller
     public function userReservations()
     {
         $user = Auth::user();
-        $reservations = Reservation::where('user_id', $user->id)->latest()->get();
+        $reservations = Reservation::with('latestPayment')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
         return response()->json($reservations);
     }
 

@@ -48,5 +48,11 @@ class DatabaseSeeder extends Seeder
 
         // Create a few more random users
         User::factory(5)->create();
+
+        // Seed packages
+        $this->call(PackageSeeder::class);
+
+        // Seed reservations with customizations and payments
+        $this->call(ReservationSeeder::class);
     }
 }

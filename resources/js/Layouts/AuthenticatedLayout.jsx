@@ -106,21 +106,21 @@ export default function AuthenticatedLayout({ header, children }) {
                                             <BarChart className="w-4 h-4" />
                                             <span>Analytics</span>
                                         </NavLink>
+
+                                        <NavLink
+                                            href={route("admin.payments")}
+                                            active={route().current(
+                                                "admin.payments*"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <CreditCard className="w-4 h-4" />
+                                            <span>Payments</span>
+                                        </NavLink>
                                     </>
                                 ) : (
                                     // Regular User Navigation
                                     <>
-                                        <NavLink
-                                            href={route("reservations.index")}
-                                            active={route().current(
-                                                "reservations*"
-                                            )}
-                                            className="inline-flex items-center space-x-2"
-                                        >
-                                            <Calendar className="w-4 h-4" />
-                                            <span>My Reservations</span>
-                                        </NavLink>
-
                                         <NavLink
                                             href={route("packages.index")}
                                             active={route().current(
@@ -130,6 +130,17 @@ export default function AuthenticatedLayout({ header, children }) {
                                         >
                                             <Package className="w-4 h-4" />
                                             <span>Packages</span>
+                                        </NavLink>
+
+                                        <NavLink
+                                            href={route("reservations.index")}
+                                            active={route().current(
+                                                "reservations.index"
+                                            )}
+                                            className="inline-flex items-center space-x-2"
+                                        >
+                                            <Calendar className="w-4 h-4" />
+                                            <span>My Reservations</span>
                                         </NavLink>
                                     </>
                                 )}
@@ -288,19 +299,19 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <BarChart className="w-4 h-4" />
                                     <span>Analytics</span>
                                 </ResponsiveNavLink>
+
+                                <ResponsiveNavLink
+                                    href={route("admin.payments")}
+                                    active={route().current("admin.payments*")}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <CreditCard className="w-4 h-4" />
+                                    <span>Payments</span>
+                                </ResponsiveNavLink>
                             </>
                         ) : (
                             // Regular User Mobile Navigation
                             <>
-                                <ResponsiveNavLink
-                                    href={route("reservations.index")}
-                                    active={route().current("reservations*")}
-                                    className="flex items-center space-x-2"
-                                >
-                                    <Calendar className="w-4 h-4" />
-                                    <span>My Reservations</span>
-                                </ResponsiveNavLink>
-
                                 <ResponsiveNavLink
                                     href={route("packages.index")}
                                     active={route().current("packages*")}
@@ -308,6 +319,17 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     <Package className="w-4 h-4" />
                                     <span>Packages</span>
+                                </ResponsiveNavLink>
+
+                                <ResponsiveNavLink
+                                    href={route("reservations.index")}
+                                    active={route().current(
+                                        "reservations.index"
+                                    )}
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Calendar className="w-4 h-4" />
+                                    <span>My Reservations</span>
                                 </ResponsiveNavLink>
                             </>
                         )}

@@ -19,7 +19,7 @@ class NavigationTest extends TestCase
     $response->assertStatus(200);
 
     // Test reservations index access
-    $response = $this->actingAs($user)->get('/reservations');
+    $response = $this->actingAs($user)->get('/my-reservations');
     $response->assertStatus(200);
 
     // Test packages index access
